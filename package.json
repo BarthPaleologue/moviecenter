@@ -1,0 +1,44 @@
+{
+    "name": "moviecenter",
+    "displayName": "Movie Center",
+    "version": "1.0.0",
+    "description": "a graphical interface to browse films on your computer",
+    "main": "index.js",
+    "homepage": "http://barth.paleologue.fr/moviecenter/",
+    "build": {
+        "appId": "com.moviecenter.app",
+        "mac": {
+            "category": "media"
+        },
+        "directories": {
+            "buildResources": "build",
+            "output": "dist"
+        },
+        "files": [
+            "**/*",
+            "build/icon.*"
+        ],
+        "buildDependenciesFromSource": true,
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true
+        }
+    },
+    "scripts": {
+        "start": "electron .",
+        "test": "test",
+        "dist": "electron-builder",
+        "pack": "electron-builder --dir"
+    },
+    "author": "barthelemy paleologue",
+    "license": "ISC",
+    "dependencies": {
+        "x-ray": "^2.3.4"
+    },
+    "devDependencies": {
+        "electron": "^11.1.0",
+        "@types/node": "^14.14.14",
+        "@types/x-ray": "^2.3.3",
+        "electron-builder": "^22.9.1"
+    }
+}

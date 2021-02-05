@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarpanch:wght@900&display=swap');
+$main-color: #111b30;
+$transition-duration: .2s;
+body {
+    margin: 0;
+    background-color: $main-color;
+    user-select: none;
+    &::-webkit-scrollbar-track {
+        padding: 2px 0;
+        background-color: #404040;
+    }
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #737272;
+    }
+    header {
+        height: 100px;
+        h1 {
+            text-align: center;
+            font-family: Sarpanch;
+            color: white;
+            text-shadow: 0 0 5px currentColor;
+            font-size: 400%;
+            line-height: 100px;
+            margin-block-end: 0;
+            margin-block-start: 0;
+        }
+    }
+    #anti-click {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba($color: rgb(0, 0, 0), $alpha: .7);
+        z-index: 8;
+        opacity: 0;
+        pointer-events: none;
+        transition: $transition-duration;
+    }
+    #sticky-menu {
+        height: 50px;
+        padding: 10px 5px;
+        position: sticky;
+        top: 0;
+        display: grid;
+        z-index: 7;
+        grid-template-columns: 50px auto 120px;
+        grid-column-gap: 5px;
+        background: $main-color;
+        svg {
+            cursor: pointer;
+            fill: lighten($color: $main-color, $amount: 20);
+            transition: $transition-duration;
+            &:hover {
+                fill: lighten($color: $main-color, $amount: 40);
+            }
+        }
+        #searchbar {
+            background: lighten($color: $main-color, $amount: 10);
+            color: grey;
+            border: none;
+            outline: none;
+            padding: 0 10px;
+            height: 50px;
+            border-radius: 2px;
+            transition: $transition-duration;
+            &:focus {
+                background: lighten($color: $main-color, $amount: 5);
+            }
+        }
+        #scan {
+            color: white;
+            margin-block-start: 0;
+            margin-block-end: 0;
+            height: 50px;
+            line-height: 50px;
+            font-family: 'Sarpanch';
+            text-align: center;
+            cursor: pointer;
+            background: lighten($color: $main-color, $amount: 10);
+            transition: $transition-duration;
+            &:hover {
+                background: lighten($color: $main-color, $amount: 20);
+            }
+        }
+    }
+    nav {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: -200px;
+        width: 200px;
+        background: transparentize($color: lighten($color: $main-color, $amount: 10), $amount: 0.4);
+        z-index: 10;
+        transition: $transition-duration;
+        p {
+            text-align: center;
+            font-family: Sarpanch;
+            color: white;
+            cursor: pointer;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-block-start: 0;
+            margin-block-end: 0;
+            transition: $transition-duration;
+            &:hover {
+                background: lighten($color: $main-color, $amount: 20);
+            }
+        }
+    }
+    section {
+        padding: 20px 40px;
+        display: grid;
+        align-content: center;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(113px, 1fr));
+        .film-container {
+            position: relative;
+            box-shadow: 0 0 0 white;
+            background-size: cover;
+            background-position: center;
+            border-radius: 2px;
+            height: 150px;
+            width: 113px;
+            transition: $transition-duration;
+            &:hover {
+                box-shadow: 0 0 10px white;
+            }
+            .film-ui {
+                background: rgba(0, 0, 0, .2);
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                transition: $transition-duration;
+                &:hover {
+                    opacity: 1;
+                }
+                .open {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-image: url("../../images/open.webp");
+                    background-size: cover;
+                    width: 30px;
+                    height: 30px;
+                    opacity: .7;
+                    transition: $transition-duration;
+                    cursor: pointer;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+                .favorite {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 30px;
+                    height: 30px;
+                    background-size: cover;
+                    cursor: pointer;
+                    transition: $transition-duration;
+                    &.empty {
+                        background-image: url(../../images/emptystar.png);
+                    }
+                    &.full {
+                        background-image: url(../../images/fullstar.png);
+                    }
+                }
+                .watch {
+                    border-radius: 2px;
+                    text-align: center;
+                    position: absolute;
+                    bottom: 0px;
+                    left: 0;
+                    right: 0;
+                    padding: 10px 15px;
+                    color: white;
+                    font-family: sans-serif;
+                    background: $main-color;
+                    margin: 0 auto;
+                    cursor: pointer;
+                    transition: $transition-duration;
+                    &:hover {
+                        background: darken($color: $main-color, $amount: 20%);
+                    }
+                }
+            }
+        }
+    }
+    #loading {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: calc(50%);
+        text-align: center;
+        color: white;
+        font-family: Sarpanch;
+        size: 200%;
+        padding: 10px 20px;
+        background: transparentize($color: darken($color: $main-color, $amount: 10), $amount: 0.2);
+        opacity: 0;
+        pointer-events: none;
+        transition: $transition-duration;
+        z-index: 100;
+    }
+    #settings {
+        position: fixed;
+        opacity: 0;
+        pointer-events: none;
+        background-color: $main-color;
+        width: 400px;
+        max-height: 300px;
+        left: calc(50% - 200px);
+        top: calc(60% - 150px);
+        border-radius: 3px;
+        z-index: 30;
+        color: white;
+        padding: 0 10px 10px 10px;
+        transition: .2s;
+        h2 {
+            text-align: center;
+            font-family: Sarpanch;
+            margin-block-start: 10px !important;
+        }
+        #cross {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            margin-block-end: 0;
+            margin-block-start: 10px;
+            vertical-align: middle;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            padding: 5px;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+        .checkboxContainer {
+            display: grid;
+            grid-template-columns: auto 50px;
+            p {
+                font-family: sans-serif;
+            }
+            input[type=checkbox] {
+                position: absolute;
+                z-index: -1000;
+                left: -1000px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                width: 1px;
+                margin: -1px;
+                padding: 0;
+                border: 0;
+            }
+            input[type=checkbox]+label {
+                padding-left: 25px;
+                height: 25px;
+                border-radius: 3px;
+                display: inline-block;
+                margin: 12.5px;
+                line-height: 25px;
+                background-repeat: no-repeat;
+                background-position: 0 0;
+                font-size: 25px;
+                vertical-align: middle;
+                cursor: pointer;
+            }
+            input[type=checkbox]:checked+label {
+                background-position: 0 -25px;
+            }
+            label {
+                background-image: url(../../images/checkbox.png);
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+        }
+        #dangerZone {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            column-gap: 5px;
+            p {
+                text-align: center;
+                font-family: sans-serif;
+                padding: 10px 0;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: .2s;
+                border: 1px solid white;
+                margin-block-start: 0;
+                margin-block-end: 0;
+                &#reloadThumbnails {
+                    $color: lighten($color: $main-color, $amount: 10);
+                    background: $color;
+                    border-color: $color;
+                    &:hover {
+                        background: darken($color: $color, $amount: 20);
+                    }
+                }
+                &#reloadCatalog {
+                    $color: lighten($color: $main-color, $amount: 10);
+                    background: $color;
+                    border-color: $color;
+                    &:hover {
+                        background: darken($color: $color, $amount: 20);
+                    }
+                }
+                &#resetCatalog {
+                    $color: crimson;
+                    background: $color;
+                    border-color: $color;
+                    &:hover {
+                        background: darken($color: $color, $amount: 20);
+                    }
+                }
+            }
+        }
+    }
+    footer {
+        p {
+            text-align: center;
+        }
+    }
+}
