@@ -1,7 +1,10 @@
 import { ipcRenderer } from "electron";
-import * as fs from "fs"
+import * as fs from "fs";
 
-let dataPath = `${process.env.APPDATA}/moviecenter/userData`;
+let dataPath = "";
+if (process.platform == "win32") dataPath = `${process.env.APPDATA}/moviecenter/userData`;
+else if (process.platform == "linux") dataPath = `${process.env.HOME}/.config/moviecenter/userData`;
+
 let catalogPath = `${dataPath}/catalog.json`;
 let settingsPath = `${dataPath}/settings.json`;
 

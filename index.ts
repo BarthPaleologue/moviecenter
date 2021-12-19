@@ -1,16 +1,24 @@
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
-import * as fs from "fs"
+import * as fs from "fs";
 import { exec } from "child_process";
-import { Catalog } from "./catalog"
+import { Catalog } from "./catalog";
 
-let dataPath = `${process.env.APPDATA}/moviecenter/userData`;
+let dataPath = "";
+if (process.platform == "win32") dataPath = `${process.env.APPDATA}/moviecenter/userData`;
+else if (process.platform == "linux") dataPath = `${process.env.HOME}/.config/moviecenter/userData`;
+
 let catalogPath = `${dataPath}/catalog.json`;
 let settingsPath = `${dataPath}/settings.json`;
 
-if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath);
+console.log("storing data in: " + dataPath);
+
+if (!fs.existsSync(dataPath)) {
+    console.log("data folder does not exist, creating...");
+    fs.mkdirSync(dataPath);
+}
 
 interface Settings {
-    fullscreen:boolean
+    fullscreen: boolean;
 }
 
 let window: BrowserWindow | null = null;
@@ -32,20 +40,29 @@ app.on("ready", () => {
     });
     let defaultSettings = {
         "fullscreen": false,
-    }
+    };
     catalog.linkWithWindow(window);
-    fs.exists(settingsPath, exist => {
-        if (exist) {
+
+    console.log("loading settings...");
+    fs.access(settingsPath, error => {
+
+        // lecture des paramètres
+        if (error == null) {
             fs.readFile(settingsPath, (err, data) => {
                 settings = JSON.parse(String(data));
                 if (settings.fullscreen) window?.setFullScreen(true);
+                console.log("settings loaded and applied successfully");
             });
         } else {
+            // écriture des paramètres par défaut
+            console.log("settings file does not exist, creating...");
             fs.writeFile(settingsPath, JSON.stringify(defaultSettings), () => { });
         }
     });
 
+    console.log("loading home page...");
     window.loadFile('./web/index.html');
+    console.log("home page loaded");
 
     window.webContents.on('did-finish-load', () => {
         catalog.load();
@@ -58,11 +75,13 @@ function writeSettings() {
 }
 
 function openFile(filePath: string) {
-    exec(`"${filePath}"`);
+    if (process.platform == "win32") exec(`"${filePath}"`);
+    else exec(`xdg-open "${filePath}"`);
 }
 
 function openFolder(dirPath: string) {
-    exec(`start "" "${dirPath}"`);
+    if (process.platform == "win32") exec(`start "" "${dirPath}"`);
+    else exec(`xdg-open "${dirPath}"`);
 }
 
 ipcMain.on("open-film", (e, filmPath: string) => {
@@ -99,7 +118,7 @@ ipcMain.on("resetThumbnails", () => {
 });
 ipcMain.on("reloadCatalog", () => {
     catalog.removeDeletedFilms();
-    catalog.write(() => window?.webContents.send("scan-finished"))
+    catalog.write(() => window?.webContents.send("scan-finished"));
 });
 
 ipcMain.on("toggleFullscreen", () => {

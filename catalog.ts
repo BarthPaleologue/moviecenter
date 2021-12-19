@@ -1,19 +1,19 @@
-import * as fs from "fs"
-import XRay from "x-ray"
+import * as fs from "fs";
+import XRay from "x-ray";
 import { isFilm, cleanName } from "./tools";
 import { BrowserWindow } from "electron";
 
 interface Film {
     path: string,
     thumbnail: string,
-    isFavorite: boolean
+    isFavorite: boolean;
 }
 
 export class Catalog {
-    films: { [name: string]: Film } = {};
+    films: { [name: string]: Film; } = {};
     path: string;
     filmStack = 0;
-    window: BrowserWindow | null = null
+    window: BrowserWindow | null = null;
     constructor(catalogPath: string) {
         this.path = catalogPath;
     }
@@ -28,17 +28,21 @@ export class Catalog {
                 path: path,
                 thumbnail: "",
                 isFavorite: false
-            }
+            };
             this.requestFilmMiniature(filmName);
         }
     }
     load() {
-        fs.exists(this.path, exist => {
-            if (exist) {
+        console.log("Loading catalog...");
+        fs.access(this.path, error => {
+            if (error == null) {
                 this.window!.webContents.send("load-catalog");
                 fs.readFile(this.path, (err, data) => {
                     this.films = JSON.parse(String(data));
                 });
+                console.log("Catalog loaded");
+            } else {
+                console.log("No catalog found");
             }
         });
     }
@@ -64,7 +68,7 @@ export class Catalog {
     }
     getFilmsFromFolder(directoryName: string, root: string) {
         this.window!.webContents.send("exploring", `${root}/${directoryName}`);
-        fs.readdir(root + "/" + directoryName, (err, files) => {
+        fs.readdir(`${root}/${directoryName}`, (err, files) => {
             files.forEach(file => {
                 (async () => {
                     let path = `${root}/${directoryName}/${file}`;
@@ -116,7 +120,7 @@ export class Catalog {
                 let imageURL = imageElm.split("src=")[1].split("\"")[1];
                 url = imageURL;
                 callback(url);
-            } catch (e) { console.error(e) };
+            } catch (e) { console.error(e); };
             this.filmStack -= 1;
             console.log(this.filmStack);
             if (this.filmStack == 0) {
